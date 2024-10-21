@@ -1,0 +1,33 @@
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <form [formGroup]="formAsistencia" (submit)="loginEstudiante()" class="col-md-6">
+      <!-- Campo de nombre usando Angular Material -->
+      <div class="mb-3">
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>Codigo Estudiante</mat-label>
+          <input matInput placeholder="Ingresa tu nombre" formControlName="codigoEstudiante" required>
+          <mat-error *ngIf="formAsistencia.get('codigoEstudiante')?.invalid && formAsistencia.get('codigoEstudiante')?.touched">
+            Codigo Obligatorio
+          </mat-error>
+        </mat-form-field>
+      </div>
+  
+      <!-- Campo de número de documento usando Angular Material -->
+      <div class="mb-3">
+        <mat-form-field class="w-100" appearance="outline">
+          <mat-label>Número de Documento</mat-label>
+          <input matInput placeholder="Ingresa tu número de documento" formControlName="numeroDocumento" required>
+          <mat-error *ngIf="formAsistencia.get('numeroDocumento')?.invalid && formAsistencia.get('numeroDocumento')?.touched">
+            Número de documento inválido
+          </mat-error>
+        </mat-form-field>
+      </div>
+  
+      <!-- Botón de envío usando Angular Material -->
+      <div class="text-center">
+        <button mat-raised-button color="primary" type="submit" [disabled]="formAsistencia.invalid">
+          Enviar
+        </button>
+      </div>
+    </form>
+  </div>
+  
