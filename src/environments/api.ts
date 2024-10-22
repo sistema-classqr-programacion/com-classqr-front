@@ -3,6 +3,6 @@ export const api = {
     getQr: '/qr/asistencia',
     postAutentication: '/qr/autenticacion',
     postSaveAsistencia: '/asistencia/guardar',
-    gettLoginEstudiante: '/estudiante/login'
-
+    gettLoginEstudiante: '/estudiante/login',
+    getAuthProfesor: '/profesor/login'
 }
