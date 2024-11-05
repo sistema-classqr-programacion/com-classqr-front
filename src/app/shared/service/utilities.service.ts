@@ -30,6 +30,7 @@ export class UtilitiesService {
       allowOutsideClick: false,
       allowEscapeKey: false,
       allowEnterKey: false,
+      backdrop: false,
     };
     await swalWithBootstrapButtons.fire(swalConfig).then((result: ISafeAny) => {
       if (result.isConfirmed && router !== '') {
@@ -63,6 +64,7 @@ export class UtilitiesService {
       allowOutsideClick: false,
       allowEscapeKey: false,
       allowEnterKey: false,
+      scrollbarPadding: false 
     };
     await swalWithBootstrapButtons.fire(swalConfig).then((result: ISafeAny) => {
       if (result.isConfirmed && router !== '') {
@@ -96,6 +98,8 @@ export class UtilitiesService {
       allowOutsideClick: false,
       allowEscapeKey: false,
       allowEnterKey: false,
+      scrollbarPadding: false,
+      backdrop: false
     };
     await swalWithBootstrapButtons.fire(swalConfig).then((result: ISafeAny) => {
       if (result.isConfirmed && router !== '') {
@@ -129,6 +133,7 @@ export class UtilitiesService {
       allowOutsideClick: false,
       allowEscapeKey: false,
       allowEnterKey: false,
+      backdrop: false,
     };
     await swalWithBootstrapButtons.fire(swalConfig).then((result: ISafeAny) => {
       if (result.isConfirmed && router !== '') {

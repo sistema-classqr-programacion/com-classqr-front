@@ -4,26 +4,25 @@ import { SharedModule } from '@sharedModule/shared.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
-import { PantallaQrComponent } from './pantalla-qr.component';
 import { AuthService } from '@sharedModule/service/auth.service';
 import { ErrorHandlerService } from '@sharedModule/service/errorHandler.service';
 import { UtilitiesService } from '@sharedModule/service/utilities.service';
-import { PANTALLA_QR } from './pantalla-qr.routes';
-import { NgxSpinnerModule } from 'ngx-spinner';
+import { REGISTRO } from './registro.routes';
+import { RegistroComponent } from './registro.component';
 
 
 
 @NgModule({
   declarations: [
-    PantallaQrComponent
+    RegistroComponent
   ],
   imports: [
     CommonModule,
     SharedModule,
     HttpClientModule,
     ReactiveFormsModule,
-    RouterModule.forChild(PANTALLA_QR),
+    RouterModule.forChild(REGISTRO),
   ],
   providers: [AuthService, ErrorHandlerService, UtilitiesService]
 })
-export class PantallaQrModule { }
+export class RegistroModule { }

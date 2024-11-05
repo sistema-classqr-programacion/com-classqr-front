@@ -92,9 +92,10 @@ export class AsistenciaComponent {
   }
 
   saveAsistencia(asistencia:Asistencia){
-    console.log("Comienza")
+    let valido = false;
     this.asistenciaService.guardarAsistencia(asistencia).pipe(
       tap((data) => {
+        valido = true
       }),
       catchError((err) => {
         console.error("Error: ", err);
@@ -103,9 +104,11 @@ export class AsistenciaComponent {
         return of(null);
       }),
       finalize(() => {
-        this.utilitiesService.showInfoMessage("Se guardo correctamente la asistencia")
+        if(valido){
+          this.utilitiesService.showInfoMessage("Se guardo correctamente la asistencia")
+          this.router.navigate(['/qr'])
+        }
         this.spinner.hide()
-        this.router.navigate(['/qr'])
       })
     ).subscribe()
   }

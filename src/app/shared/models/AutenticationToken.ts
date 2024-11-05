@@ -1,8 +1,9 @@
 import { Asistencia } from "./Asistencia"
+import { Qr } from "./Qr"
 
 export class AutenticationToken {
 
     public token:string = ''
-    public asistenciaDTO:Asistencia | null = null
+    public qrDTO:Qr | null = null
 
 }

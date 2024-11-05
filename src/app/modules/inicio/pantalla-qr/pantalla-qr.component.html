@@ -1,0 +1,19 @@
+<div class="d-flex justify-content-center align-items-center min-vh-80 mt-5">
+  <div class="col-md-6 col-sm-8 col-10">
+    <mat-card class="text-center p-4 shadow-lg">
+      <mat-card-title>Código QR Generado</mat-card-title>
+      <mat-card-content *ngIf="qrCodeImage">
+        <div class="d-flex justify-content-center mb-4">
+          <img [src]="qrCodeImage" alt="Código QR" class="qr-code-image img-fluid">
+        </div>
+        <p class="text-muted">Escanea el código QR o descárgalo para su uso posterior.</p>
+      </mat-card-content>
+      <mat-card-actions class="d-flex justify-content-center">
+        <button mat-raised-button color="primary" (click)="downloadQRCode()">
+          <mat-icon>download</mat-icon>
+          Descargar Código QR
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

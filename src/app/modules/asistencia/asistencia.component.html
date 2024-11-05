@@ -1,33 +1,36 @@
 <div class="d-flex justify-content-center align-items-center vh-100">
-    <form [formGroup]="formAsistencia" (submit)="loginEstudiante()" class="col-md-6">
-      <!-- Campo de nombre usando Angular Material -->
-      <div class="mb-3">
-        <mat-form-field class="w-100" appearance="outline">
-          <mat-label>Codigo Estudiante</mat-label>
-          <input matInput placeholder="Ingresa tu nombre" formControlName="codigoEstudiante" required>
-          <mat-error *ngIf="formAsistencia.get('codigoEstudiante')?.invalid && formAsistencia.get('codigoEstudiante')?.touched">
-            Codigo Obligatorio
-          </mat-error>
-        </mat-form-field>
-      </div>
-  
-      <!-- Campo de número de documento usando Angular Material -->
-      <div class="mb-3">
-        <mat-form-field class="w-100" appearance="outline">
-          <mat-label>Número de Documento</mat-label>
-          <input matInput placeholder="Ingresa tu número de documento" formControlName="numeroDocumento" required>
-          <mat-error *ngIf="formAsistencia.get('numeroDocumento')?.invalid && formAsistencia.get('numeroDocumento')?.touched">
-            Número de documento inválido
-          </mat-error>
-        </mat-form-field>
-      </div>
-  
-      <!-- Botón de envío usando Angular Material -->
-      <div class="text-center">
-        <button mat-raised-button color="primary" type="submit" [disabled]="formAsistencia.invalid">
-          Enviar
-        </button>
-      </div>
-    </form>
-  </div>
-  
+  <form [formGroup]="formAsistencia" (submit)="loginEstudiante()" class="col-12 col-md-8 col-lg-6 p-4 border rounded shadow">
+    <h1 class="text-center mb-4">Asistencia</h1>
+
+    <!-- Campo de Código Estudiante usando Angular Material -->
+    <div class="mb-4">
+      <mat-form-field class="w-100" appearance="outline">
+        <mat-label>Código Estudiante</mat-label>
+        <mat-icon matPrefix>school</mat-icon>
+        <input matInput placeholder="Ingresa tu código" formControlName="codigoEstudiante" required>
+        <mat-error *ngIf="formAsistencia.get('codigoEstudiante')?.invalid && formAsistencia.get('codigoEstudiante')?.touched">
+          Código obligatorio
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Campo de Número de Documento usando Angular Material -->
+    <div class="mb-4">
+      <mat-form-field class="w-100" appearance="outline">
+        <mat-label>Número de Documento</mat-label>
+        <mat-icon matPrefix>assignment_ind</mat-icon>
+        <input matInput placeholder="Ingresa tu número de documento" formControlName="numeroDocumento" required>
+        <mat-error *ngIf="formAsistencia.get('numeroDocumento')?.invalid && formAsistencia.get('numeroDocumento')?.touched">
+          Número de documento inválido
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Botón de Envío usando Angular Material -->
+    <div class="text-center">
+      <button mat-raised-button color="primary" type="submit" [disabled]="formAsistencia.invalid" class="w-50">
+        Enviar
+      </button>
+    </div>
+  </form>
+</div>

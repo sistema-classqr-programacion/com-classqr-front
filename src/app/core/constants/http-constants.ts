@@ -4,8 +4,14 @@ export const MAIL_NOT_FOUNF = 'MAIL_NOT_FOUNF';
 export const CODE_NOT_VALID = 'CODE_NOT_VALID';
 export const BAD_CREDENTIAL = 'BAD_CREDENTIAL';
 export const USER_ALREADY_EXIST = 'USER_ALREADY_EXIST';
+export const UNAUTHORIZED = 'UNAUTHORIZED';
 
 export const APP_ERRORS = [
+  {
+    code: UNAUTHORIZED,
+    title: 'UNAUTHORIZED',
+    message: 'Error en las credenciales',
+  },
   {
     code: ERROR_VALIDATE_EMAIL_PROVIDER,
     title: 'ERROR_VALIDATE_EMAIL_PROVIDER',

@@ -7,22 +7,21 @@ import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from '@sharedModule/service/auth.service';
 import { ErrorHandlerService } from '@sharedModule/service/errorHandler.service';
 import { UtilitiesService } from '@sharedModule/service/utilities.service';
-import { LoginComponent } from './login.component';
-import { LOGIN } from './login.routes';
-
+import { HeaderComponent } from './header.component';
 
 
 @NgModule({
   declarations: [
-    LoginComponent
+    HeaderComponent
   ],
   imports: [
     CommonModule,
     SharedModule,
     HttpClientModule,
     ReactiveFormsModule,
-    RouterModule.forChild(LOGIN),
+    RouterModule
   ],
-  providers: [AuthService, ErrorHandlerService, UtilitiesService]
+  providers: [AuthService, ErrorHandlerService, UtilitiesService],
+  exports: [HeaderComponent]
 })
-export class LoginModule { }
+export class HeaderModule { }

@@ -6,6 +6,7 @@ import { environment } from '@env/environment';
 import { ISafeAny } from '@sharedModule/models/ISafeAny';
 import { UtilitiesService } from '@sharedModule/service/utilities.service';
 import { HttpError } from '@sharedModule/models/http-error';
+import { RespuestaGeneral } from '@sharedModule/models/RespuestaGeneral';
 
 const APP_XHR_TIMEOUT = 120000;
 
@@ -69,8 +70,7 @@ export class DefaultInterceptor implements HttpInterceptor {
     switch (errorResponse.status) {
       case 401:
         this.handleSessionExpired();
-        // Retorna un observable con un error, ya que de lo contrario no devuelve nada
-        return throwError(() => new Error('Unauthorized - Session expired'));
+        return throwError(() => this.getCustomError(errorResponse));
       case 404:
       case 500:
         return throwError(() => {
@@ -83,20 +83,14 @@ export class DefaultInterceptor implements HttpInterceptor {
 
   private handleSessionExpired(): void {
     sessionStorage.clear();
-    this.utilitiesService.showWarningMessage('¡Session expired!');
-    console.log('¡Session expired!, Redirect to Login');
   }
 
   private getCustomError(errorResponse: ISafeAny): HttpError {
     let customError = new HttpError();
     try {
       // Verificar si errorResponse y su estructura existen
-      const errors = errorResponse?.error?.errors;
-      if (Array.isArray(errors) && errors.length > 0 && errors[0]?.code) {
-        customError = HttpError.initWithCode(errors[0].code);
-      } else {
-        console.warn('Unexpected error structure:', errorResponse);
-      }
+      const error:RespuestaGeneral = errorResponse?.error;
+      customError = HttpError.initWithCode(String(error.status));
     } catch (e) {
       console.error('Error parsing custom error:', e);
     }

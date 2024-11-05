@@ -14,4 +14,9 @@ export class AsistenciaService {
     public guardarAsistencia(asistencia:Asistencia): Observable<RespuestaGeneral> {
         return this.httpClient.post<RespuestaGeneral>(`${environment.api.baseUrlAPI}${environment.api.postSaveAsistencia}`,asistencia);
     }
+
+    public asistenciaBuscarTodas():Observable<RespuestaGeneral> {
+        return this.httpClient.get<RespuestaGeneral> (`${environment.api.baseUrlAPI}${environment.api.getAsistenciaBuscarTodas}`);
+    }
+
 }

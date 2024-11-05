@@ -13,6 +13,7 @@ import { LoginProfesor } from '@sharedModule/models/LoginProfesor';
 import { AuthResponse } from '@sharedModule/models/AuthResponse';
 import { RespuestaGeneral } from '@sharedModule/models/RespuestaGeneral';
 import { ProfesorToken } from '@sharedModule/models/ProfesorToken';
+import { HttpError } from '@sharedModule/models/http-error';
 
 @Component({
   selector: 'app-login',
@@ -70,6 +71,7 @@ export class LoginComponent implements OnInit{
     }
     sessionStorage.removeItem('userToken');
     this.spinner.show(); // Show Spinner
+    let succes = false;
     this.authService.loginProfesor(objectUsuario).pipe(
       tap((data:RespuestaGeneral) => {
           const token:AuthResponse = data.data as AuthResponse;
@@ -77,21 +79,30 @@ export class LoginComponent implements OnInit{
           const obj64 = this.base64Service.objectoToBase64(profesorData)
           this.subjectService.setValueBase64(obj64);
           mensaje = data.message
+          succes = true
       }),
-      catchError((err) => {
-        console.error("Error: ", err);
+      catchError((err:HttpError) => {
+        console.error("Error pipe: ", err);
         this.utilitiesService.showErrorMessage(err.message)
         this.spinner.hide()
         return of(null)
       }),
       finalize(() => {
-        this.spinner.hide().then(() => {
-          this.utilitiesService.showSucessMessage(mensaje, 'inicio-sesion', 'Aceptar').then(() => {
-            this.router.navigate(['/qr']);
+        if(succes){
+          this.spinner.hide().then(() => {
+            this.utilitiesService.showSucessMessage(mensaje, 'inicio-sesion', 'Aceptar').then(() => {
+              this.router.navigate(['/inicio']);
+            });
           });
-        });
+        }
+        this.spinner.hide()
       } ) // Hiden Spinner
-    ).subscribe();
+    ).subscribe({
+      error:(error) => {
+        console.log(error)
+        this.spinner.hide()
+      }
+    });
   }
 
 }

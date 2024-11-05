@@ -11,8 +11,6 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { CoreModule } from './core/core.module';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { DefaultInterceptor } from '@core/interceptors/default.interceptor';
-import { HttpRequestMockInterceptorService } from '@core/interceptors/http-request-mock-interceptor.service';
-import { environment } from '@env/environment';
 import { APP_ROUTES } from './app.routes';
 
 const INTERCEPTOR_PROVIDES = [{ provide: HTTP_INTERCEPTORS, useClass: DefaultInterceptor, multi: true }];

@@ -7,22 +7,26 @@ import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from '@sharedModule/service/auth.service';
 import { ErrorHandlerService } from '@sharedModule/service/errorHandler.service';
 import { UtilitiesService } from '@sharedModule/service/utilities.service';
-import { LoginComponent } from './login.component';
-import { LOGIN } from './login.routes';
-
+import { PANTALLA_QR } from './inicio.routes';
+import { PantallaQrComponent } from './pantalla-qr/pantalla-qr.component';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { AsistenciaComponent } from '../asistencia/asistencia.component';
+import { AsistentesComponent } from './asistentes/asistentes.component';
+import { InicioComponent } from './inicio.component';
+import { HeaderModule } from '../header/header.module';
 
 
 @NgModule({
-  declarations: [
-    LoginComponent
-  ],
   imports: [
+    NgxPaginationModule,
     CommonModule,
     SharedModule,
     HttpClientModule,
     ReactiveFormsModule,
-    RouterModule.forChild(LOGIN),
+    HeaderModule,
+    RouterModule.forChild(PANTALLA_QR)
   ],
+  declarations: [PantallaQrComponent, AsistentesComponent, InicioComponent],
   providers: [AuthService, ErrorHandlerService, UtilitiesService]
 })
-export class LoginModule { }
+export class InicioModule { }

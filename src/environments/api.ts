@@ -4,5 +4,6 @@ export const api = {
     postAutentication: '/qr/autenticacion',
     postSaveAsistencia: '/asistencia/guardar',
     gettLoginEstudiante: '/estudiante/login',
-    getAuthProfesor: '/profesor/login'
+    getAuthProfesor: '/profesor/login',
+    getAsistenciaBuscarTodas: '/asistencia/buscar-todas'
 }

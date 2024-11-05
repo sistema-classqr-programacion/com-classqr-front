@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { AsistenciaTokenData } from '@sharedModule/models/AsistenciaTokenData';
 import { AutenticationToken } from '@sharedModule/models/AutenticationToken';
+import { Qr } from '@sharedModule/models/Qr';
 import { AuthService } from '@sharedModule/service/auth.service';
 import { SubjectService } from '@sharedModule/service/subjectService.service';
 import { UtilitiesService } from '@sharedModule/service/utilities.service';
@@ -26,8 +27,9 @@ export class AsistenciaGuard implements CanActivate {
     state: RouterStateSnapshot
   ): Observable<boolean> {
     const token = route.queryParams['token']; // Obtener el token de la URL
-
+    console.log(token)
     if (token) {
+      sessionStorage.setItem('userToken', token);
       try {
         const autentication = this.buildAuthenticationToken(token);
         
@@ -48,12 +50,12 @@ export class AsistenciaGuard implements CanActivate {
    * Construye el objeto de autenticación basado en el token decodificado.
    */
   private buildAuthenticationToken(token: string): AutenticationToken {
-    const objeto: AsistenciaTokenData = jwtDecode(token);
-    this.subjectService.setValueBase64(objeto.codigoAsistencia)
+    const objeto: Qr = jwtDecode(token);
+    this.subjectService.setValueBase64(objeto.codigoQr)
     return {
       token: token,
-      asistenciaDTO: {
-        codigoAsistencia: objeto.codigoAsistencia,
+      qrDTO: {
+        codigoQr: objeto.codigoQr,
       }
     };
   }

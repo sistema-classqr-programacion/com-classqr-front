@@ -1,14 +1,16 @@
 import { Routes } from '@angular/router';
 import { AsistenciaGuard } from '@core/guards/asistencia.guard';
 import { RouterGuard } from '@core/guards/router.guard';
+import { InicioComponent } from './modules/inicio/inicio.component';
 
 export const APP_ROUTES: Routes = [
    
     {
-        path: 'qr',
+        path: 'inicio',
+        component: InicioComponent,
         canActivate: [RouterGuard], // Protege la ruta de 'inicio'
         canActivateChild: [RouterGuard], // Si hay rutas hijas, aplica el guardián para los hijos
-        loadChildren: () => import('./modules/pantalla-qr/pantalla-qr.module').then((m) => m.PantallaQrModule),
+        loadChildren: () => import('./modules/inicio/inicio.module').then((m) => m.InicioModule),
     },
     {
         path: 'asistencia',

@@ -1,0 +1,37 @@
+<div class="container mt-4">
+  <h3 class="mb-4 text-center">Tabla de Asistencias</h3>
+
+  <!-- Ajuste para mantener el tamaño mínimo de la tabla -->
+  <div class="table-responsive" style="min-height: 27rem; overflow-y: auto;">
+    <table class="table table-bordered table-striped table-hover">
+      <thead class="table-dark text-center">
+        <tr>
+          <th scope="col" class="col-1">#</th> <!-- Uso de clases de Bootstrap para el tamaño -->
+          <th scope="col" class="col-3">Nombre</th>
+          <th scope="col" class="col-4">Código</th>
+          <th scope="col" class="col-2">Asistió</th>
+          <th scope="col" class="col-2">No Asistió</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of data | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index">
+          <td class="text-center">{{ item.id }}</td> <!-- Enumeración dinámica -->
+          <td>{{ item.name }}</td>
+          <td>{{ item.email }}</td>
+          <td class="text-center">{{ item.asistio ? '✔️' : '' }}</td>
+          <td class="text-center">{{ !item.asistio ? '❌' : '' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Paginador -->
+  <div class="d-flex justify-content-center mt-3">
+    <pagination-controls
+      (pageChange)="page = $event"
+      previousLabel="« Anterior"
+      nextLabel="Siguiente »"
+      class="pagination-sm">
+    </pagination-controls>
+  </div>
+</div>
