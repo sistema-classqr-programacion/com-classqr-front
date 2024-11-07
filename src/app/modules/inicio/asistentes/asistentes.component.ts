@@ -1,8 +1,15 @@
 import { Component } from '@angular/core';
+import { Curso } from '@sharedModule/models/Curso';
+import { HttpError } from '@sharedModule/models/http-error';
+import { ProfesorToken } from '@sharedModule/models/ProfesorToken';
+import { RespuestaGeneral } from '@sharedModule/models/RespuestaGeneral';
 import { AsistenciaService } from '@sharedModule/service/asistencia.service';
+import { CursoProfesorService } from '@sharedModule/service/curso-profesor.service';
+import { SubjectService } from '@sharedModule/service/subjectService.service';
 import { UtilitiesService } from '@sharedModule/service/utilities.service';
+import { jwtDecode } from 'jwt-decode';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { tap } from 'rxjs';
+import { catchError, finalize, of, tap } from 'rxjs';
 
 @Component({
   selector: 'app-asistentes',
@@ -14,10 +21,15 @@ export class AsistentesComponent {
   constructor(
     private asistenciaService:AsistenciaService,
     private utilitiesService:UtilitiesService,
+    private subject:SubjectService,
+    private cursoProfesorService:CursoProfesorService,
     private spinner:NgxSpinnerService
   ){
 
   }
+
+  selectedOption: string = '';
+  cursos:Curso[] = [];
 
   // Datos simulados de ejemplo
   data = [
@@ -48,14 +60,29 @@ export class AsistentesComponent {
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    
+    this.loadData()
   }
 
   loadData():void {
     this.spinner.show();
-    this.asistenciaService.asistenciaBuscarTodas().pipe(
-    )
-
+    let token = sessionStorage.getItem('userToken')
+    if(token){
+      let profesorData:ProfesorToken = jwtDecode(token)
+      this.cursoProfesorService.consultarCursosProfesor(profesorData.codigoProfesor).pipe(
+        tap((data:RespuestaGeneral) => {
+          this.cursos = data.data as Curso[]
+        }),
+        catchError((err:HttpError) => {
+          console.error("Error pipe ", err)
+          this.utilitiesService.showErrorMessage(err.message)
+          this.spinner.hide()
+          return of(null)
+        }),
+        finalize(() => {
+          this.spinner.hide()
+        })
+      ).subscribe()
+    }
   }
 
 }

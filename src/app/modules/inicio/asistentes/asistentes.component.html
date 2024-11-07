@@ -1,12 +1,19 @@
 <div class="container mt-4">
-  <h3 class="mb-4 text-center">Tabla de Asistencias</h3>
+  <div class="d-flex align-items-center justify-content-center mb-4">
+    <h3 class="mb-0 text-center">
+      Tabla de Asistencias de
+      <select class="form-select d-inline w-auto ms-2" id="selectExample" [(ngModel)]="selectedOption">
+        <option *ngFor="let curso of cursos" [value]="curso.codigoCurso">{{ curso.nombreCurso }}</option>
+      </select>
+    </h3>
+  </div>
 
   <!-- Ajuste para mantener el tamaño mínimo de la tabla -->
   <div class="table-responsive" style="min-height: 27rem; overflow-y: auto;">
     <table class="table table-bordered table-striped table-hover">
       <thead class="table-dark text-center">
         <tr>
-          <th scope="col" class="col-1">#</th> <!-- Uso de clases de Bootstrap para el tamaño -->
+          <th scope="col" class="col-1">#</th>
           <th scope="col" class="col-3">Nombre</th>
           <th scope="col" class="col-4">Código</th>
           <th scope="col" class="col-2">Asistió</th>
@@ -15,7 +22,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let item of data | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index">
-          <td class="text-center">{{ item.id }}</td> <!-- Enumeración dinámica -->
+          <td class="text-center">{{ item.id }}</td>
           <td>{{ item.name }}</td>
           <td>{{ item.email }}</td>
           <td class="text-center">{{ item.asistio ? '✔️' : '' }}</td>

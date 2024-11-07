@@ -5,5 +5,6 @@ export const api = {
     postSaveAsistencia: '/asistencia/guardar',
     gettLoginEstudiante: '/estudiante/login',
     getAuthProfesor: '/profesor/login',
-    getAsistenciaBuscarTodas: '/asistencia/buscar-todas'
+    getAsistenciaBuscarTodas: '/asistencia/buscar-todas',
+    getCursosAsignadosProfesor: '/curso-profesor/asignados'
 }

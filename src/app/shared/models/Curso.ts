@@ -1,3 +1,4 @@
 export class Curso{
-    codigoCurso:string = ''
+    codigoCurso?:string = ''
+    nombreCurso?:string = ''
 }

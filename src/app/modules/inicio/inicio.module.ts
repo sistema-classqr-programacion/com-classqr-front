@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '@sharedModule/shared.module';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from '@sharedModule/service/auth.service';
@@ -22,6 +22,7 @@ import { HeaderModule } from '../header/header.module';
     CommonModule,
     SharedModule,
     HttpClientModule,
+    FormsModule,
     ReactiveFormsModule,
     HeaderModule,
     RouterModule.forChild(PANTALLA_QR)
