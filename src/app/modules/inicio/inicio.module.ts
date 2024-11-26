@@ -14,6 +14,9 @@ import { AsistenciaComponent } from '../asistencia/asistencia.component';
 import { AsistentesComponent } from './asistentes/asistentes.component';
 import { InicioComponent } from './inicio.component';
 import { HeaderModule } from '../header/header.module';
+import { CargaEstudianteDialogComponent } from './carga-estudiante-dialog/carga-estudiante-dialog.component';
+import { CargaEstudianteFormDialogComponent } from './carga-estudiante-form-dialog/carga-estudiante-form-dialog.component';
+import { CambiarEstadoDialogComponent } from './cambiar-estado-dialog/cambiar-estado-dialog.component';
 
 
 @NgModule({
@@ -27,7 +30,7 @@ import { HeaderModule } from '../header/header.module';
     HeaderModule,
     RouterModule.forChild(PANTALLA_QR)
   ],
-  declarations: [PantallaQrComponent, AsistentesComponent, InicioComponent],
+  declarations: [PantallaQrComponent, AsistentesComponent, InicioComponent, CargaEstudianteDialogComponent, CargaEstudianteFormDialogComponent, CambiarEstadoDialogComponent],
   providers: [AuthService, ErrorHandlerService, UtilitiesService]
 })
 export class InicioModule { }

@@ -1,0 +1,44 @@
+// General Navbar Styles
+.navbar {
+    background-color: #f8f9fa; // Fondo claro
+    display: flex;
+    align-items: center; // Centra verticalmente todos los elementos
+    padding: 0.5rem 1rem;
+  
+    .container-fluid {
+      display: flex;
+      align-items: center;
+    }
+  
+    .nav-link {
+      font-size: 16px; // Asegura un tamaño consistente con el selector
+      font-weight: 500;
+      color: #495057; // Gris oscuro para los enlaces
+      &:hover {
+        color: #007bff; // Azul al pasar el mouse
+      }
+      &.active {
+        color: #007bff; // Color activo
+        font-weight: 600;
+      }
+    }
+  
+    // Selector de cursos
+    .form-select {
+      width: 200px; // Ancho personalizado
+      font-size: 16px; // Tamaño consistente con el texto del menú
+      margin-left: 1rem;
+    }
+  
+    // Botón de logout
+    .btn-outline-danger {
+      font-size: 16px; // Tamaño consistente
+      font-weight: 500;
+      border-color: #dc3545;
+      &:hover {
+        background-color: #dc3545;
+        color: #fff;
+      }
+    }
+  }
+  

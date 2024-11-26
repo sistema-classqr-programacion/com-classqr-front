@@ -1,0 +1,23 @@
+.dialog-container {
+    .mat-dialog-content {
+      padding: 20px;
+    }
+  
+    .mat-form-field {
+      margin-bottom: 16px;
+    }
+  
+    .btn {
+      margin-right: 8px;
+    }
+  
+    .btn-primary {
+      background-color: #1976d2;
+      color: #fff;
+  
+      &:hover {
+        background-color: #155da1;
+      }
+    }
+  }
+  

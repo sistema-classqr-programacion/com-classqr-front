@@ -1,0 +1,27 @@
+<div class="dialog-container">
+    <h2 mat-dialog-title>Cambiar Estado</h2>
+    <mat-dialog-content>
+      <form [formGroup]="changeStatusForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <mat-form-field appearance="fill" class="w-100">
+            <mat-label>Selecciona el nuevo estado</mat-label>
+            <mat-select formControlName="status" required>
+              <mat-option *ngFor="let status of statuses" [value]="status.value">
+                {{ status.label }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="changeStatusForm.get('status')?.hasError('required')">
+              El estado es obligatorio
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </form>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close class="btn btn-secondary">Cancelar</button>
+      <button mat-raised-button color="primary" [disabled]="changeStatusForm.invalid" (click)="onSubmit()">
+        Cambiar Estado
+      </button>
+    </mat-dialog-actions>
+  </div>
+  

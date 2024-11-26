@@ -1,6 +1,7 @@
 import { Curso } from "./Curso"
 import { Estudiante } from "./Estudiante"
 import { Profesor } from "./Profesor"
+import { Qr } from "./Qr"
 
 export class Asistencia{
 
@@ -11,6 +12,8 @@ export class Asistencia{
     public codigoProfesorFk?: Profesor | null = null
 
     public codigoCursoFk?: Curso | null = null
+
+    public codigoQrFk?: Qr | null = null
 
     public ipEstudiante?: string = ''
 

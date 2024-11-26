@@ -1,0 +1,32 @@
+<div class="container mt-5">
+    <div class="card shadow-lg">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0 text-center">Buscar Estudiante</h4>
+      </div>
+      <div class="card-body">
+        <form (ngSubmit)="buscarEstudiante()">
+          <!-- Campo Código del Estudiante -->
+          <mat-form-field appearance="outline" class="w-100 mb-4">
+            <mat-label>Código del Estudiante</mat-label>
+            <input
+              matInput
+              type="text"
+              placeholder="Ingrese el código del estudiante"
+              [(ngModel)]="codigoEstudiante"
+              name="codigoEstudiante"
+              required
+            />
+            <mat-error *ngIf="!codigoEstudiante">El código del estudiante es obligatorio.</mat-error>
+          </mat-form-field>
+  
+          <!-- Botón de Búsqueda -->
+          <div class="d-flex justify-content-center">
+            <button mat-raised-button color="primary" type="submit" [disabled]="!codigoEstudiante">
+              Buscar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  

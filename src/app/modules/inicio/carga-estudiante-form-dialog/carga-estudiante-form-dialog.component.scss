@@ -1,0 +1,23 @@
+.container {
+    margin-top: 2rem;
+  
+    .card {
+      max-width: 500px;
+      margin: 0 auto;
+  
+      .card-header {
+        text-align: center;
+        font-weight: bold;
+      }
+  
+      mat-form-field {
+        width: 100%;
+      }
+  
+      button {
+        min-width: 150px;
+        font-weight: bold;
+      }
+    }
+  }
+  

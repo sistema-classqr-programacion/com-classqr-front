@@ -1,23 +1,39 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm">
-    <div class="container-fluid">
-      <!-- Botón de menú responsive -->
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-  
-      <!-- Menú de navegación y contenido -->
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <!-- Menú de navegación -->
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link" [routerLink]="'/inicio/'">Generar QR</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" [routerLink]="'/inicio/asistentes'">Asistentes</a>
-          </li>
-        </ul>
-  
-      </div>
+  <div class="container-fluid">
+    <!-- Botón de menú responsive -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Menú de navegación y contenido -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex align-items-center">
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="'/inicio/pantalla-qr'" routerLinkActive="active">Generar QR</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="'/inicio/asistentes'" routerLinkActive="active">Asistentes</a>
+        </li>
+        <li class="nav-item ms-3">
+          <!-- Selector de Bootstrap -->
+          <select class="form-select" [(ngModel)]="selectedOption" id="cursoSelector">
+            <option *ngFor="let curso of cursos" [value]="curso.codigoCurso">
+              {{ curso.nombreCurso }}
+            </option>
+          </select>
+        </li>
+      </ul>
+
+      <!-- Botón de logout -->
+      <button class="btn btn-outline-danger" (click)="logout()">Logout</button>
     </div>
-  </nav>
-  
+  </div>
+</nav>

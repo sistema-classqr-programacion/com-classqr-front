@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '@sharedModule/shared.module';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from '@sharedModule/service/auth.service';
@@ -19,7 +19,8 @@ import { HeaderComponent } from './header.component';
     SharedModule,
     HttpClientModule,
     ReactiveFormsModule,
-    RouterModule
+    RouterModule,
+    FormsModule,
   ],
   providers: [AuthService, ErrorHandlerService, UtilitiesService],
   exports: [HeaderComponent]

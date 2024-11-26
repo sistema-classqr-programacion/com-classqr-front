@@ -51,7 +51,7 @@ export class AsistenciaGuard implements CanActivate {
    */
   private buildAuthenticationToken(token: string): AutenticationToken {
     const objeto: Qr = jwtDecode(token);
-    this.subjectService.setValueBase64(objeto.codigoQr)
+    this.subjectService.setBase64Value(objeto.codigoQr)
     return {
       token: token,
       qrDTO: {

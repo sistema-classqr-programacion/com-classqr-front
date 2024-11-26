@@ -38,5 +38,13 @@ module.exports = {
       "pathRewrite": {
         "^/api/v1/curso-profesor/": ""
       }
+    },
+    "/api/v1/curso-estudiante/*": {
+      "target": "http://localhost:8003/api/v1/curso-estudiante/",
+      "secure": false,
+      "logLevel": "debug",
+      "pathRewrite": {
+        "^/api/v1/curso-estudiante/": ""
+      }
     }
 }

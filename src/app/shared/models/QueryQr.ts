@@ -1,3 +1,4 @@
 export class QueryQr{
-    public codigoQr:string | null= ''
+    public codigoProfesor:string | null= ''
+    public codigoCurso:string | null= ''
 }

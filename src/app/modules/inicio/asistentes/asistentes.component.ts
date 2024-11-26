@@ -1,88 +1,183 @@
-import { Component } from '@angular/core';
-import { Curso } from '@sharedModule/models/Curso';
-import { HttpError } from '@sharedModule/models/http-error';
-import { ProfesorToken } from '@sharedModule/models/ProfesorToken';
+import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Estudiante } from '@sharedModule/models/Estudiante';
 import { RespuestaGeneral } from '@sharedModule/models/RespuestaGeneral';
-import { AsistenciaService } from '@sharedModule/service/asistencia.service';
-import { CursoProfesorService } from '@sharedModule/service/curso-profesor.service';
+import { CursoEstudianteService } from '@sharedModule/service/curso-estudiante.service';
 import { SubjectService } from '@sharedModule/service/subjectService.service';
 import { UtilitiesService } from '@sharedModule/service/utilities.service';
-import { jwtDecode } from 'jwt-decode';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { catchError, finalize, of, tap } from 'rxjs';
+import { CargaEstudianteDialogComponent } from '../carga-estudiante-dialog/carga-estudiante-dialog.component';
+import { CargaEstudianteFormDialogComponent } from '../carga-estudiante-form-dialog/carga-estudiante-form-dialog.component';
+import { CambiarEstadoDialogComponent } from '../cambiar-estado-dialog/cambiar-estado-dialog.component';
+import { Asistencia } from '@sharedModule/models/Asistencia';
+import { jwtDecode } from 'jwt-decode';
+import { AsistenciaService } from '@sharedModule/service/asistencia.service';
 
 @Component({
   selector: 'app-asistentes',
   templateUrl: './asistentes.component.html',
-  styleUrl: './asistentes.component.scss'
+  styleUrls: ['./asistentes.component.scss'],
 })
-export class AsistentesComponent {
+export class AsistentesComponent implements OnInit {
+  page = 1; // Página actual
+  pageSize = 10; // Tamaño de página
+  displayedColumns: string[] = ['id', 'nombres', 'apellidos', 'codigo-estudiante', 'asistio', 'noAsistio']; // Columnas de la tabla
+  estudiantes: Estudiante[] = []; // Datos de estudiantes
 
   constructor(
-    private asistenciaService:AsistenciaService,
-    private utilitiesService:UtilitiesService,
-    private subject:SubjectService,
-    private cursoProfesorService:CursoProfesorService,
-    private spinner:NgxSpinnerService
-  ){
-
-  }
-
-  selectedOption: string = '';
-  cursos:Curso[] = [];
-
-  // Datos simulados de ejemplo
-  data = [
-    { id: 1, name: 'John Doe', email: 'john@example.com', asistio: true },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com', asistio: false },
-    { id: 3, name: 'Michael Johnson', email: 'michael@example.com', asistio: true },
-    { id: 4, name: 'Alice Brown', email: 'alice@example.com', asistio: true },
-    { id: 5, name: 'Robert White', email: 'robert@example.com', asistio: true },
-    { id: 6, name: 'Maria Green', email: 'maria@example.com', asistio: true },
-    { id: 7, name: 'David Black', email: 'david@example.com', asistio: true },
-    { id: 8, name: 'Sophia Blue', email: 'sophia@example.com', asistio: false },
-    { id: 9, name: 'George Red', email: 'george@example.com', asistio: true },
-    { id: 10, name: 'Grace Yellow', email: 'grace@example.com', asistio: true },
-    { id: 11, name: 'Oliver Pink', email: 'oliver@example.com', asistio: false },
-    { id: 12, name: 'Emma Purple', email: 'emma@example.com', asistio: true },
-    { id: 13, name: 'Liam Gray', email: 'liam@example.com', asistio: true },
-    { id: 14, name: 'Noah Silver', email: 'noah@example.com', asistio: false },
-    { id: 15, name: 'Ava Gold', email: 'ava@example.com', asistio: true },
-    { id: 16, name: 'Isabella Orange', email: 'isabella@example.com', asistio: true },
-    { id: 17, name: 'Mason Blue', email: 'mason@example.com', asistio: true },
-    { id: 18, name: 'Logan White', email: 'logan@example.com', asistio: true },
-  ];
-  
-  // Configuración de paginación
-  page = 1;           // Página actual
-  pageSize = 10;       // Tamaño de página
+    private cursoEstudianteService: CursoEstudianteService,
+    private utilitiesService: UtilitiesService,
+    private subject: SubjectService,
+    private dialog: MatDialog,
+    private spinner: NgxSpinnerService,
+    private asistenciaService:AsistenciaService
+  ) {}
 
   ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
-    this.loadData()
+    this.cargarEstudiantes();
   }
 
-  loadData():void {
+  /**
+   * Carga la lista de estudiantes para el curso seleccionado.
+   */
+  cargarEstudiantes(): void {
     this.spinner.show();
-    let token = sessionStorage.getItem('userToken')
-    if(token){
-      let profesorData:ProfesorToken = jwtDecode(token)
-      this.cursoProfesorService.consultarCursosProfesor(profesorData.codigoProfesor).pipe(
-        tap((data:RespuestaGeneral) => {
-          this.cursos = data.data as Curso[]
+    const codigoCurso = this.subject.getValue();
+    this.cursoEstudianteService
+      .consultarEstudiantesCurso(codigoCurso)
+      .pipe(
+        tap((respuesta: RespuestaGeneral) => {
+          this.estudiantes = respuesta.data as Estudiante[];
         }),
-        catchError((err:HttpError) => {
-          console.error("Error pipe ", err)
-          this.utilitiesService.showErrorMessage(err.message)
-          this.spinner.hide()
-          return of(null)
+        catchError((error) => {
+          console.error('Error al cargar estudiantes:', error);
+          this.utilitiesService.showErrorMessage(error.message);
+          return of(null);
         }),
-        finalize(() => {
-          this.spinner.hide()
-        })
-      ).subscribe()
-    }
+        finalize(() => this.spinner.hide())
+      )
+      .subscribe();
+  }
+
+  /**
+   * Maneja el evento de cambio de página.
+   */
+  onPageChange(event: any): void {
+    this.page = event.pageIndex + 1;
+    this.pageSize = event.pageSize;
+  }
+
+  /**
+   * Abre el diálogo para cargar estudiantes desde un archivo Excel.
+   */
+  cargarEstudiantesExcel(): void {
+    const dialogRef = this.dialog.open(CargaEstudianteDialogComponent, {
+      width: '400px',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('Diálogo cerrado:', result);
+    });
+  }
+
+  /**
+   * Abre el formulario para cargar estudiantes manualmente.
+   */
+  cargarEstudiantesFormulario(): void {
+    const dialogRef = this.dialog.open(CargaEstudianteFormDialogComponent, {
+      width: '400px',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log('Diálogo cerrado:', result);
+    });
+  }
+
+  openDialog(estudiante: Estudiante): void {
+    this.dialog.open(CambiarEstadoDialogComponent, {
+      width: '400px',
+      data: estudiante
+    }).afterClosed().subscribe((result) => {
+      if(result['status'] === "asisitio" && !estudiante.asistio){
+        this.spinner.show()
+        const token = sessionStorage.getItem("userToken")
+        const codigoQr = sessionStorage.getItem("codigoQr")
+        let  tokenSession = ''
+        if(token){
+          tokenSession = jwtDecode(token)
+        }
+        let codigoProfesor = ''
+        if(tokenSession && typeof tokenSession ==  'object' && 'codigoProfesor' in tokenSession){
+          codigoProfesor = tokenSession['codigoProfesor']
+        } 
+        let asistencia:Asistencia = {
+          codigoEstudianteFk: {
+            codigoEstudiante: estudiante.codigoEstudiante
+          },
+          codigoProfesorFk: {
+            codigoProfesor: codigoProfesor
+          },
+          codigoCursoFk: {
+            codigoCurso: this.subject.getValue()
+          },
+          codigoQrFk: {
+            codigoQr: codigoQr!
+          },
+          fechaAsistencia: new Date
+        }
+        this.asistenciaService.guardarAsistencia(asistencia).pipe(
+          tap((data) => {
+          }),
+          catchError((err) => {
+            console.error("Error: ", err);
+            this.utilitiesService.showErrorMessage(err.message);
+            this.spinner.hide();
+            return of(null);
+          }),
+          finalize(() => {
+            this.spinner.hide()
+          })
+        ).subscribe()
+      }else if(result['status'] === "noAsisitio" && estudiante.asistio){
+        this.spinner.show()
+        const token = sessionStorage.getItem("userToken")
+        let  tokenSession = ''
+        if(token){
+          tokenSession = jwtDecode(token)
+        }
+        let codigoProfesor = ''
+        if(tokenSession && typeof tokenSession ==  'object' && 'codigoProfesor' in tokenSession){
+          codigoProfesor = tokenSession['codigoProfesor']
+        } 
+        let asistencia:Asistencia = {
+          codigoEstudianteFk: {
+            codigoEstudiante: estudiante.codigoEstudiante
+          },
+          codigoProfesorFk: {
+            codigoProfesor: codigoProfesor
+          },
+          codigoCursoFk: {
+            codigoCurso: this.subject.getValue()
+          },
+          fechaAsistencia: new Date
+        }
+        this.asistenciaService.eliminarAsistencia(asistencia).pipe(
+          tap((data) => {
+          }),
+          catchError((err) => {
+            console.error("Error: ", err);
+            this.utilitiesService.showErrorMessage(err.message);
+            this.spinner.hide();
+            return of(null);
+          }),
+          finalize(() => {
+            this.spinner.hide()
+          })
+        ).subscribe()
+      }
+    });
+
   }
 
 }

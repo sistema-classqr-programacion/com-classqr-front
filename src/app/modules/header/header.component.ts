@@ -1,35 +1,30 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthService } from '@sharedModule/service/auth.service';
-import { UtilitiesService } from '@sharedModule/service/utilities.service';
-import { NgxSpinner, NgxSpinnerService } from 'ngx-spinner';
-import { catchError, finalize, of, tap } from 'rxjs';
+import { Curso } from '@sharedModule/models/Curso';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+  styleUrls: ['./header.component.scss'], // Corrección en el plural de "styleUrls"
 })
-export class HeaderComponent implements OnInit{
+export class HeaderComponent implements OnInit {
+  @Input() cursos: Curso[] = []; // Cursos pasados desde el componente padre
+  selectedOption: string = ''; // Curso seleccionado
+  public urlLogo: string = ''; // URL del logo (puedes ajustarla dinámicamente)
 
-  public urlLogo = '';
-
-  constructor(private router:Router,
-    private authService: AuthService,
-    private utilitiesService: UtilitiesService,
-    private spinner: NgxSpinnerService,
-  ){}
+  constructor(private spinner: NgxSpinnerService) {}
 
   ngOnInit(): void {
-    this.dataDefault()
+    // Puedes inicializar valores aquí si es necesario
+    this.selectedOption = this.cursos.length > 0 && this.cursos[0].codigoCurso ? this.cursos[0].codigoCurso : '';
   }
 
-  dataDefault(){
-    
+  /**
+   * Método para realizar el logout
+   */
+  logout(): void {
+    this.spinner.show();
+    // Lógica para el logout (redirigir, limpiar sesión, etc.)
+    console.log('Logout triggered');
   }
-
-  logout() {
-    this.spinner.show()
-  }
-  
 }

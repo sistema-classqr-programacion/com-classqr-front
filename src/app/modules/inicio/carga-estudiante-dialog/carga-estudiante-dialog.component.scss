@@ -1,0 +1,14 @@
+mat-dialog-content {
+  input[type='file'] {
+    width: 100%;
+    margin: 10px 0;
+    padding: 5px;
+  }
+
+  mat-error {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    display: block;
+  }
+}

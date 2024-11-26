@@ -7,7 +7,6 @@ export const APP_ROUTES: Routes = [
    
     {
         path: 'inicio',
-        component: InicioComponent,
         canActivate: [RouterGuard], // Protege la ruta de 'inicio'
         canActivateChild: [RouterGuard], // Si hay rutas hijas, aplica el guardián para los hijos
         loadChildren: () => import('./modules/inicio/inicio.module').then((m) => m.InicioModule),

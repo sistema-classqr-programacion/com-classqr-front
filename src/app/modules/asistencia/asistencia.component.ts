@@ -9,7 +9,6 @@ import { LoginEstudiante } from '@sharedModule/models/LoginEstudiante';
 import { RespuestaGeneral } from '@sharedModule/models/RespuestaGeneral';
 import { AsistenciaService } from '@sharedModule/service/asistencia.service';
 import { Base64Service } from '@sharedModule/service/base64.service';
-import { CursoProfesorService } from '@sharedModule/service/curso-profesor.service';
 import { EstudianteService } from '@sharedModule/service/estudiante.service';
 import { SubjectService } from '@sharedModule/service/subjectService.service';
 import { UtilitiesService } from '@sharedModule/service/utilities.service';

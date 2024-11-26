@@ -77,7 +77,7 @@ export class LoginComponent implements OnInit{
           const token:AuthResponse = data.data as AuthResponse;
           let profesorData:ProfesorToken = jwtDecode(token.token);
           const obj64 = this.base64Service.objectoToBase64(profesorData)
-          this.subjectService.setValueBase64(obj64);
+          this.subjectService.setBase64Value(obj64);
           mensaje = data.message
           succes = true
       }),
