@@ -34,11 +34,10 @@ export class AsistenciaComponent implements OnInit {
     private ipPublicaService: IpPublicaService,
     private asistenciaService: AsistenciaService,
     private router: Router,
-    private  route: ActivatedRouteSnapshot
   ) {}
 
   ngOnInit(): void {
-    const token = this.route.queryParams['token']; // Obtener el token de la URL
+    const token = this.subjectService.getValueToken(); // Obtener el token de la URL
     sessionStorage.setItem('userToken', token)
     this.buildAsistenciaForm();
   }

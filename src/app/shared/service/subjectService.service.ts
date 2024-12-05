@@ -15,6 +15,8 @@ export class SubjectService {
   // Subject para una lista de valores
   private datosNavegacionListSubject = new BehaviorSubject<string[]>([]);
 
+  private tokenSubject = new BehaviorSubject<string>('')
+
   constructor() {
     console.log('SubjectService inicializado');
   }
@@ -58,6 +60,23 @@ export class SubjectService {
   getValue(): string {
     return this.datosNavegacionSubject.value;
   }
+
+    /**
+   * Actualiza el valor del subject que maneja un dato único.
+   * @param value Nuevo valor a establecer.
+   */
+  setValueToken(value: string): void {
+      this.tokenSubject.next(value);
+    }
+  
+    /**
+     * Obtiene el último valor emitido por el subject de datos únicos.
+     * @returns string
+     */
+    getValueToken(): string {
+      return this.tokenSubject.value;
+    }
+  
 
   /**
    * Agrega un nuevo valor al subject que maneja una lista de valores.
