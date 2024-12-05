@@ -30,8 +30,7 @@ export class AsistenciaGuard implements CanActivate {
   ): Observable<boolean> {
     const token = route.queryParams['token']; // Obtener el token de la URL
     if (token) {
-      sessionStorage.setItem('userToken', token);
-
+      console.log(token)
       try {
         return this.ipPublicaService.obtenerIpPublica().pipe(
           switchMap((data) => {
