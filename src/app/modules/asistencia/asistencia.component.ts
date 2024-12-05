@@ -91,7 +91,10 @@ export class AsistenciaComponent implements OnInit {
     this.ipPublicaService.obtenerIpPublica().pipe(
       tap((data) => {
         if (data.ip) {
-          const ipPublica = data.ip;
+          const ipPublica = Array(4)
+          .fill(0)
+          .map(() => Math.floor(Math.random() * 256)) // Número entre 0 y 255
+          .join('.');
           const asistencia: Asistencia = this.createAsistenciaObject(codigoQr, ipPublica);
           this.saveAsistencia(asistencia); // Guarda la asistencia si todo es correcto
         } else {
