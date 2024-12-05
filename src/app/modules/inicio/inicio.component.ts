@@ -60,7 +60,7 @@ export class InicioComponent implements OnInit {
           if (this.cursos.length > 0) {
             const cursoInicial = this.cursos[0].codigoCurso;
             this.subject.setValue(cursoInicial!); // Establece el primer curso como seleccionado
-            this.router.navigate(['/inicio/pantalla-qr']); // Redirige a la ruta con el primer curso
+            this.router.navigate(['/inicio/pantalla-qr'], { queryParams: { curso: cursoInicial } }); // Redirige a la ruta con el primer curso
           }
         }),
         catchError((error: HttpError) => {
@@ -81,6 +81,6 @@ export class InicioComponent implements OnInit {
    */
   onCursoSeleccionado(codigoCurso: string): void {
     this.subject.setValue(codigoCurso); // Actualiza el valor en el Subject
-    this.router.navigate(['/inicio/pantalla-qr']); // Redirige a la ruta con el curso seleccionado
+    this.router.navigate(['/inicio/pantalla-qr'], { queryParams: { curso: codigoCurso } }); // Redirige a la ruta con el curso seleccionado
   }
 }
