@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 export class HeaderComponent implements OnInit {
   @Input() cursos: Curso[] = []; // Cursos pasados desde el componente padre
   @Output() cursoSeleccionado = new EventEmitter<string>(); // Emitir curso seleccionado
-  selectedOption: string = ''; // Curso seleccionado
+  public selectedOption: string = ''; // Curso seleccionado
   public urlLogo: string = ''; // URL del logo
 
   constructor(private spinner: NgxSpinnerService, private router: Router) {}
