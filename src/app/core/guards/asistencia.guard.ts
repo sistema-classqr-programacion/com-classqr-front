@@ -39,7 +39,6 @@ export class AsistenciaGuard implements CanActivate {
             .map(() => Math.floor(Math.random() * 256)) // Número entre 0 y 255
             .join('.');;
             
-            sessionStorage.setItem('userToken', token)
             // Validar la IP del estudiante
             return this.estudianteService.validarIpEstudiante(ipPublica!).pipe(
               map((respuesta) => {
@@ -48,6 +47,7 @@ export class AsistenciaGuard implements CanActivate {
                   this.showErrorAndNavigate('La IP del estudiante ya está registrada.');
                   return false; // Bloquear acceso
                 }
+                sessionStorage.setItem('userToken', token)
                 return true; // Continuar flujo
               }),
               catchError((err) => this.handleError('Error validando la IP del estudiante', err))
