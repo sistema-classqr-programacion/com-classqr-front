@@ -9,7 +9,7 @@ export const PANTALLA_QR: Routes = [
     component: InicioComponent, // Contenedor principal
     children: [
       {
-        path: 'pantalla-qr', // Ruta para Pantalla QR
+        path: 'pantalla-qr/:codigo', // Ruta para Pantalla QR
         component: PantallaQrComponent,
       },
       {

@@ -29,7 +29,7 @@ export class PantallaQrComponent {
   ) {}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(() => {
+    this.route.paramMap.subscribe(() => {
       this.loadQRCode();
     })
   }
