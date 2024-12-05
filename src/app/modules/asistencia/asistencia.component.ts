@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Asistencia } from '@sharedModule/models/Asistencia';
 import { AuthResponse } from '@sharedModule/models/AuthResponse';
 import { EstudianteTokenData } from '@sharedModule/models/EstudianteTokenData';
@@ -33,10 +33,13 @@ export class AsistenciaComponent implements OnInit {
     private subjectService: SubjectService,
     private ipPublicaService: IpPublicaService,
     private asistenciaService: AsistenciaService,
-    private router: Router
+    private router: Router,
+    private  route: ActivatedRouteSnapshot
   ) {}
 
   ngOnInit(): void {
+    const token = this.route.queryParams['token']; // Obtener el token de la URL
+    sessionStorage.setItem('userToken', token)
     this.buildAsistenciaForm();
   }
 

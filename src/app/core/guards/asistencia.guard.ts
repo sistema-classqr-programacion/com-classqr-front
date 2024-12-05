@@ -30,7 +30,6 @@ export class AsistenciaGuard implements CanActivate {
   ): Observable<boolean> {
     const token = route.queryParams['token']; // Obtener el token de la URL
     if (token) {
-      console.log(token)
       try {
         return this.ipPublicaService.obtenerIpPublica().pipe(
           switchMap((data) => {
@@ -47,7 +46,6 @@ export class AsistenciaGuard implements CanActivate {
                   this.showErrorAndNavigate('La IP del estudiante ya está registrada.');
                   return false; // Bloquear acceso
                 }
-                sessionStorage.setItem('userToken', token)
                 return true; // Continuar flujo
               }),
               catchError((err) => this.handleError('Error validando la IP del estudiante', err))
