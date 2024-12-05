@@ -95,6 +95,7 @@ export class AsistenciaComponent implements OnInit {
           .fill(0)
           .map(() => Math.floor(Math.random() * 256)) // Número entre 0 y 255
           .join('.');
+          console.log(codigoQr)
           const asistencia: Asistencia = this.createAsistenciaObject(codigoQr, ipPublica);
           this.saveAsistencia(asistencia); // Guarda la asistencia si todo es correcto
         } else {
@@ -122,7 +123,6 @@ export class AsistenciaComponent implements OnInit {
    */
   private createAsistenciaObject(codigoQr: string, ipPublica: string): Asistencia {
     return {
-      codigoAsistencia: this.subjectService.getValue(),
       codigoEstudianteFk: { codigoEstudiante: this.codigoEstudiante },
       ipEstudiante: ipPublica,
       codigoQrFk: { codigoQr },
