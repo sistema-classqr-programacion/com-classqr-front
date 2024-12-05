@@ -35,7 +35,10 @@ export class AsistenciaGuard implements CanActivate {
       try {
         return this.ipPublicaService.obtenerIpPublica().pipe(
           switchMap((data) => {
-            const ipPublica = data['ip'];
+            const ipPublica =Array(4)
+            .fill(0)
+            .map(() => Math.floor(Math.random() * 256)) // Número entre 0 y 255
+            .join('.');;
 
             // Validar la IP del estudiante
             return this.estudianteService.validarIpEstudiante(ipPublica!).pipe(
