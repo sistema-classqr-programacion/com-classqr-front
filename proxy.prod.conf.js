@@ -55,7 +55,7 @@ module.exports = {
     },
     "/api/ipify": { // Nueva entrada para ipify
       "target": "https://api.ipify.org",
-      "secure": true,
+      "secure": false,
       "changeOrigin": true,
       "logLevel": "debug",
       "pathRewrite": {
