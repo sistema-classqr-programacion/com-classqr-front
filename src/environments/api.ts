@@ -8,5 +8,9 @@ export const api = {
     getAuthProfesor: '/profesor/login',
     getAsistenciaBuscarTodas: '/asistencia/buscar-todas',
     getCursosAsignadosProfesor: '/curso-profesor/asignados',
-    getEstudiantesCurso: '/curso-estudiante/estudiante-curso'
+    getEstudiantesCurso: '/curso-estudiante/estudiante-curso',
+    postCargarEstudianteCurso: '/curso-estudiante/cargar-estudiante-curso',
+    postCargarEstudianteCursoExcel: '/curso-estudiante/cargar-estudiante-curso-excel',
+    getIpPublica: '/api/ipify?format=json',
+    getValidarIp: '/estudiante/validar-ip'
 }

@@ -8,6 +8,7 @@ import { UtilitiesService } from '@sharedModule/service/utilities.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { catchError, finalize, of, tap } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-pantalla-qr',
@@ -23,11 +24,14 @@ export class PantallaQrComponent {
     private utilitiesService: UtilitiesService,
     private spinner: NgxSpinnerService,
     private sanitizer: DomSanitizer,
-    private subject:SubjectService
+    private subject:SubjectService,
+    private route:ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.loadQRCode();
+    this.route.queryParams.subscribe(() => {
+      this.loadQRCode();
+    })
   }
 
   loadQRCode(): void {

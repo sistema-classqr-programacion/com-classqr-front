@@ -1,6 +1,6 @@
 module.exports = {
    "/api/v1/qr/*": {
-        "target": "http://localhost:8001/api/v1/qr/",
+        "target": "https://qr-ms-e2edcrahf7ave8ar.mexicocentral-01.azurewebsites.net/api/v1/qr/",
         "secure": false,
         "logLevel": "debug",
         "pathRewrite": {
@@ -8,7 +8,7 @@ module.exports = {
         }
     },
     "/api/v1/asistencia/*": {
-      "target": "http://localhost:8001/api/v1/asistencia/",
+      "target": "https://qr-ms-e2edcrahf7ave8ar.mexicocentral-01.azurewebsites.net/api/v1/asistencia/",
       "secure": false,
       "logLevel": "debug",
       "pathRewrite": {
@@ -16,7 +16,7 @@ module.exports = {
       }
     },
     "/api/v1/estudiante/*": {
-      "target": "http://localhost:8003/api/v1/estudiante/",
+      "target": "https://estudiante-ms-d5ezc7afbgfah7ac.mexicocentral-01.azurewebsites.net/api/v1/estudiante/",
       "secure": false,
       "logLevel": "debug",
       "pathRewrite": {
@@ -24,7 +24,7 @@ module.exports = {
       }
     },
     "/api/v1/profesor/*": {
-      "target": "http://localhost:8004/api/v1/profesor/",
+      "target": "https://profesor-ms-dte8d3efgeczcudu.mexicocentral-01.azurewebsites.net/api/v1/profesor/",
       "secure": false,
       "logLevel": "debug",
       "pathRewrite": {
@@ -32,7 +32,7 @@ module.exports = {
       }
     },
     "/api/v1/curso-profesor/*": {
-      "target": "http://localhost:8004/api/v1/curso-profesor/",
+      "target": "https://profesor-ms-dte8d3efgeczcudu.mexicocentral-01.azurewebsites.net/api/v1/curso-profesor/",
       "secure": false,
       "logLevel": "debug",
       "pathRewrite": {
@@ -40,7 +40,7 @@ module.exports = {
       }
     },
     "/api/v1/curso-estudiante/*": {
-      "target": "http://localhost:8003/api/v1/curso-estudiante/",
+      "target": "https://estudiante-ms-d5ezc7afbgfah7ac.mexicocentral-01.azurewebsites.net/api/v1/curso-estudiante/",
       "secure": false,
       "logLevel": "debug",
       "pathRewrite": {

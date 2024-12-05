@@ -17,14 +17,29 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex align-items-center">
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="'/inicio/pantalla-qr'" routerLinkActive="active">Generar QR</a>
+          <a
+            class="nav-link"
+            [routerLink]="'/inicio/pantalla-qr'"
+            routerLinkActive="active"
+            >Generar QR</a
+          >
         </li>
         <li class="nav-item">
-          <a class="nav-link" [routerLink]="'/inicio/asistentes'" routerLinkActive="active">Asistentes</a>
+          <a
+            class="nav-link"
+            [routerLink]="'/inicio/asistentes'"
+            routerLinkActive="active"
+            >Asistentes</a
+          >
         </li>
         <li class="nav-item ms-3">
           <!-- Selector de Bootstrap -->
-          <select class="form-select" [(ngModel)]="selectedOption" id="cursoSelector">
+          <select
+            class="form-select"
+            [(ngModel)]="selectedOption"
+            id="cursoSelector"
+            (change)="actualizarCurso()" 
+          >
             <option *ngFor="let curso of cursos" [value]="curso.codigoCurso">
               {{ curso.nombreCurso }}
             </option>

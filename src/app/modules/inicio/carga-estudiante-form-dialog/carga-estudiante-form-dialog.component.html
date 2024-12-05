@@ -1,10 +1,10 @@
 <div class="container mt-5">
     <div class="card shadow-lg">
       <div class="card-header bg-primary text-white">
-        <h4 class="mb-0 text-center">Buscar Estudiante</h4>
+        <h4 class="mb-0 text-center">Registrar Estudiante</h4>
       </div>
       <div class="card-body">
-        <form (ngSubmit)="buscarEstudiante()">
+        <form (ngSubmit)="registrarEstudiante()">
           <!-- Campo Código del Estudiante -->
           <mat-form-field appearance="outline" class="w-100 mb-4">
             <mat-label>Código del Estudiante</mat-label>
@@ -22,7 +22,7 @@
           <!-- Botón de Búsqueda -->
           <div class="d-flex justify-content-center">
             <button mat-raised-button color="primary" type="submit" [disabled]="!codigoEstudiante">
-              Buscar
+              Registrar
             </button>
           </div>
         </form>

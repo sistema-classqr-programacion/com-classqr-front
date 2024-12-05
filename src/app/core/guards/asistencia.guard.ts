@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
-import { AsistenciaTokenData } from '@sharedModule/models/AsistenciaTokenData';
-import { AutenticationToken } from '@sharedModule/models/AutenticationToken';
-import { Qr } from '@sharedModule/models/Qr';
 import { AuthService } from '@sharedModule/service/auth.service';
+import { IpPublicaService } from '@sharedModule/service/ip-publica.service';
 import { SubjectService } from '@sharedModule/service/subjectService.service';
 import { UtilitiesService } from '@sharedModule/service/utilities.service';
+import { EstudianteService } from '@sharedModule/service/estudiante.service';
 import { jwtDecode } from 'jwt-decode';
 import { Observable, of } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, finalize, switchMap, tap } from 'rxjs/operators';
+import { Qr } from '@sharedModule/models/Qr';
 
 @Injectable({
   providedIn: 'root'
@@ -16,10 +16,12 @@ import { map, catchError } from 'rxjs/operators';
 export class AsistenciaGuard implements CanActivate {
 
   constructor(
-    private authService: AuthService, 
-    private router: Router, 
+    private authService: AuthService,
+    private router: Router,
+    private ipPublicaService: IpPublicaService,
     private utilitiesService: UtilitiesService,
-    private subjectService: SubjectService
+    private subjectService: SubjectService,
+    private estudianteService: EstudianteService
   ) {}
 
   canActivate(
@@ -27,16 +29,39 @@ export class AsistenciaGuard implements CanActivate {
     state: RouterStateSnapshot
   ): Observable<boolean> {
     const token = route.queryParams['token']; // Obtener el token de la URL
-    console.log(token)
     if (token) {
       sessionStorage.setItem('userToken', token);
+
       try {
-        const autentication = this.buildAuthenticationToken(token);
-        
-        // Validar el token llamando al backend
-        return this.authService.validateToken(autentication).pipe(
-          map(isValid => this.handleValidationResult(Boolean(isValid.data))),
-          catchError(error => this.handleError('Error al validar el token', error))
+        return this.ipPublicaService.obtenerIpPublica().pipe(
+          switchMap((data) => {
+            const ipPublica = data['ip'];
+
+            // Validar la IP del estudiante
+            return this.estudianteService.validarIpEstudiante(ipPublica!).pipe(
+              map((respuesta) => {
+                const isIpValid = Boolean(respuesta.data);
+                if (isIpValid) {
+                  this.showErrorAndNavigate('La IP del estudiante ya está registrada.');
+                  return false; // Bloquear acceso
+                }
+                return true; // Continuar flujo
+              }),
+              catchError((err) => this.handleError('Error validando la IP del estudiante', err))
+            );
+          }),
+          switchMap((canProceed) => {
+            if (canProceed) {
+              const autentication = this.buildAuthenticationToken(token);
+
+              // Validar el token llamando al backend
+              return this.authService.validateToken(autentication).pipe(
+                map(isValid => this.handleValidationResult(Boolean(isValid.data))),
+                catchError(error => this.handleError('Error al validar el token', error))
+              );
+            }
+            return of(false);
+          })
         );
       } catch (error) {
         return this.handleError('Error decodificando el token', error);
@@ -49,9 +74,9 @@ export class AsistenciaGuard implements CanActivate {
   /**
    * Construye el objeto de autenticación basado en el token decodificado.
    */
-  private buildAuthenticationToken(token: string): AutenticationToken {
-    const objeto: Qr = jwtDecode(token);
-    this.subjectService.setBase64Value(objeto.codigoQr)
+  private buildAuthenticationToken(token: string): any {
+    const objeto:Qr = jwtDecode(token);
+    this.subjectService.setValue(objeto.codigoQr);
     return {
       token: token,
       qrDTO: {
@@ -67,7 +92,7 @@ export class AsistenciaGuard implements CanActivate {
     if (isValid) {
       return true; // Permitir el acceso si el token es válido
     } else {
-      this.showErrorAndNavigate('El token no es validado');
+      this.showErrorAndNavigate('El token no es válido.');
       return false;
     }
   }
@@ -77,7 +102,7 @@ export class AsistenciaGuard implements CanActivate {
    */
   private async showErrorAndNavigate(message: string): Promise<void> {
     await this.utilitiesService.showErrorMessage(message);
-    this.router.navigate(['/qr']);
+    this.router.navigate(['/otra-pagina']); // Cambia '/otra-pagina' por la ruta deseada
   }
 
   /**

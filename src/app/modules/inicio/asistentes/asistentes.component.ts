@@ -31,7 +31,7 @@ export class AsistentesComponent implements OnInit {
     private subject: SubjectService,
     private dialog: MatDialog,
     private spinner: NgxSpinnerService,
-    private asistenciaService:AsistenciaService
+    private asistenciaService: AsistenciaService
   ) {}
 
   ngOnInit(): void {
@@ -61,14 +61,6 @@ export class AsistentesComponent implements OnInit {
   }
 
   /**
-   * Maneja el evento de cambio de página.
-   */
-  onPageChange(event: any): void {
-    this.page = event.pageIndex + 1;
-    this.pageSize = event.pageSize;
-  }
-
-  /**
    * Abre el diálogo para cargar estudiantes desde un archivo Excel.
    */
   cargarEstudiantesExcel(): void {
@@ -77,7 +69,9 @@ export class AsistentesComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('Diálogo cerrado:', result);
+      if (result) {
+        this.cargarEstudiantes(); // Refresca la lista de estudiantes después de cerrar el diálogo
+      }
     });
   }
 
@@ -90,94 +84,141 @@ export class AsistentesComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('Diálogo cerrado:', result);
+      if (result) {
+        this.cargarEstudiantes(); // Refresca la lista de estudiantes después de cerrar el diálogo
+      }
     });
   }
 
+  /**
+   * Abre el diálogo para cambiar el estado de asistencia de un estudiante.
+   * @param estudiante Estudiante seleccionado.
+   */
   openDialog(estudiante: Estudiante): void {
     this.dialog.open(CambiarEstadoDialogComponent, {
       width: '400px',
-      data: estudiante
+      data: estudiante,
     }).afterClosed().subscribe((result) => {
-      if(result['status'] === "asisitio" && !estudiante.asistio){
-        this.spinner.show()
-        const token = sessionStorage.getItem("userToken")
-        const codigoQr = sessionStorage.getItem("codigoQr")
-        let  tokenSession = ''
-        if(token){
-          tokenSession = jwtDecode(token)
+      if (result) {
+        if (result['status'] === 'asisitio' && estudiante.asistio) {
+          this.utilitiesService.showInfoMessage('El estudiante ya tiene marcado el estado de asistencia.');
+          return;
         }
-        let codigoProfesor = ''
-        if(tokenSession && typeof tokenSession ==  'object' && 'codigoProfesor' in tokenSession){
-          codigoProfesor = tokenSession['codigoProfesor']
-        } 
-        let asistencia:Asistencia = {
-          codigoEstudianteFk: {
-            codigoEstudiante: estudiante.codigoEstudiante
-          },
-          codigoProfesorFk: {
-            codigoProfesor: codigoProfesor
-          },
-          codigoCursoFk: {
-            codigoCurso: this.subject.getValue()
-          },
-          codigoQrFk: {
-            codigoQr: codigoQr!
-          },
-          fechaAsistencia: new Date
+  
+        if (result['status'] === 'noAsisitio' && !estudiante.asistio) {
+          this.utilitiesService.showInfoMessage('El estudiante ya tiene marcado el estado de no asistencia.');
+          return;
         }
-        this.asistenciaService.guardarAsistencia(asistencia).pipe(
-          tap((data) => {
-          }),
-          catchError((err) => {
-            console.error("Error: ", err);
-            this.utilitiesService.showErrorMessage(err.message);
-            this.spinner.hide();
-            return of(null);
-          }),
-          finalize(() => {
-            this.spinner.hide()
-          })
-        ).subscribe()
-      }else if(result['status'] === "noAsisitio" && estudiante.asistio){
-        this.spinner.show()
-        const token = sessionStorage.getItem("userToken")
-        let  tokenSession = ''
-        if(token){
-          tokenSession = jwtDecode(token)
+  
+        // Si el estado cambia, realiza las acciones correspondientes
+        if (result['status'] === 'asisitio' && !estudiante.asistio) {
+          this.spinner.show();
+          this.guardarAsistencia(estudiante);
+        } else if (result['status'] === 'noAsisitio' && estudiante.asistio) {
+          this.spinner.show();
+          this.eliminarAsistencia(estudiante);
         }
-        let codigoProfesor = ''
-        if(tokenSession && typeof tokenSession ==  'object' && 'codigoProfesor' in tokenSession){
-          codigoProfesor = tokenSession['codigoProfesor']
-        } 
-        let asistencia:Asistencia = {
-          codigoEstudianteFk: {
-            codigoEstudiante: estudiante.codigoEstudiante
-          },
-          codigoProfesorFk: {
-            codigoProfesor: codigoProfesor
-          },
-          codigoCursoFk: {
-            codigoCurso: this.subject.getValue()
-          },
-          fechaAsistencia: new Date
-        }
-        this.asistenciaService.eliminarAsistencia(asistencia).pipe(
-          tap((data) => {
-          }),
-          catchError((err) => {
-            console.error("Error: ", err);
-            this.utilitiesService.showErrorMessage(err.message);
-            this.spinner.hide();
-            return of(null);
-          }),
-          finalize(() => {
-            this.spinner.hide()
-          })
-        ).subscribe()
       }
     });
+  }
+  
 
+  /**
+   * Guarda la asistencia de un estudiante.
+   * @param estudiante Estudiante para registrar asistencia.
+   */
+  private guardarAsistencia(estudiante: Estudiante): void {
+    const token = sessionStorage.getItem('userToken');
+    const codigoQr = sessionStorage.getItem('codigoQr');
+    let tokenSession = '';
+
+    if (token) {
+      tokenSession = jwtDecode(token);
+    }
+
+    let codigoProfesor = '';
+    if (tokenSession && typeof tokenSession === 'object' && 'codigoProfesor' in tokenSession) {
+      codigoProfesor = tokenSession['codigoProfesor'];
+    }
+
+    const asistencia: Asistencia = {
+      codigoEstudianteFk: {
+        codigoEstudiante: estudiante.codigoEstudiante,
+      },
+      codigoProfesorFk: {
+        codigoProfesor: codigoProfesor,
+      },
+      codigoCursoFk: {
+        codigoCurso: this.subject.getValue(),
+      },
+      codigoQrFk: {
+        codigoQr: codigoQr!,
+      },
+      fechaAsistencia: new Date(),
+    };
+
+    this.asistenciaService.guardarAsistencia(asistencia).pipe(
+      tap(() => {
+        this.utilitiesService.showInfoMessage('Asistencia guardada correctamente.');
+        this.cargarEstudiantes(); // Refresca la lista de estudiantes
+      }),
+      catchError((err) => {
+        console.error('Error al guardar asistencia:', err);
+        this.utilitiesService.showErrorMessage(err.message);
+        return of(null);
+      }),
+      finalize(() => this.spinner.hide())
+    ).subscribe();
   }
 
+  /**
+   * Elimina la asistencia de un estudiante.
+   * @param estudiante Estudiante para eliminar asistencia.
+   */
+  private eliminarAsistencia(estudiante: Estudiante): void {
+    const token = sessionStorage.getItem('userToken');
+    let tokenSession = '';
+
+    if (token) {
+      tokenSession = jwtDecode(token);
+    }
+
+    let codigoProfesor = '';
+    if (tokenSession && typeof tokenSession === 'object' && 'codigoProfesor' in tokenSession) {
+      codigoProfesor = tokenSession['codigoProfesor'];
+    }
+
+    const asistencia: Asistencia = {
+      codigoEstudianteFk: {
+        codigoEstudiante: estudiante.codigoEstudiante,
+      },
+      codigoProfesorFk: {
+        codigoProfesor: codigoProfesor,
+      },
+      codigoCursoFk: {
+        codigoCurso: this.subject.getValue(),
+      },
+      fechaAsistencia: new Date(),
+    };
+
+    this.asistenciaService.eliminarAsistencia(asistencia).pipe(
+      tap(() => {
+        this.utilitiesService.showInfoMessage('Asistencia eliminada correctamente.');
+        this.cargarEstudiantes(); // Refresca la lista de estudiantes
+      }),
+      catchError((err) => {
+        console.error('Error al eliminar asistencia:', err);
+        this.utilitiesService.showErrorMessage(err.message);
+        return of(null);
+      }),
+      finalize(() => this.spinner.hide())
+    ).subscribe();
+  }
+
+  onPageChange(event: any): void {
+    this.page = event.pageIndex + 1; // Actualiza la página actual (pageIndex es cero basado)
+    this.pageSize = event.pageSize; // Actualiza el tamaño de página
+    this.cargarEstudiantes(); // Recarga los datos para la nueva página
+  }
+  
 }

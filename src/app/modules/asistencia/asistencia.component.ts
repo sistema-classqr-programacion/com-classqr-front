@@ -1,117 +1,147 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Asistencia } from '@sharedModule/models/Asistencia';
 import { AuthResponse } from '@sharedModule/models/AuthResponse';
-import { Estudiante } from '@sharedModule/models/Estudiante';
 import { EstudianteTokenData } from '@sharedModule/models/EstudianteTokenData';
 import { LoginEstudiante } from '@sharedModule/models/LoginEstudiante';
 import { RespuestaGeneral } from '@sharedModule/models/RespuestaGeneral';
+import { RespuestaIpPublica } from '@sharedModule/models/RespuestaIpPublica';
 import { AsistenciaService } from '@sharedModule/service/asistencia.service';
-import { Base64Service } from '@sharedModule/service/base64.service';
 import { EstudianteService } from '@sharedModule/service/estudiante.service';
+import { IpPublicaService } from '@sharedModule/service/ip-publica.service';
 import { SubjectService } from '@sharedModule/service/subjectService.service';
 import { UtilitiesService } from '@sharedModule/service/utilities.service';
 import { jwtDecode } from 'jwt-decode';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { catchError, finalize, of, tap } from 'rxjs';
+import { catchError, concatMap, finalize, Observable, of, tap } from 'rxjs';
 
 @Component({
   selector: 'app-asistencia',
   templateUrl: './asistencia.component.html',
-  styleUrl: './asistencia.component.scss'
+  styleUrls: ['./asistencia.component.scss']
 })
-export class AsistenciaComponent {
-
-  public formAsistencia!:FormGroup;
-
-  private codigoEstudiante:string = ''
+export class AsistenciaComponent implements OnInit {
+  public formAsistencia!: FormGroup;
+  private codigoEstudiante: string = '';
 
   constructor(
     private formBuilder: FormBuilder,
-    private estudianteService:EstudianteService,
-    private spinner:NgxSpinnerService,
+    private estudianteService: EstudianteService,
+    private spinner: NgxSpinnerService,
     private utilitiesService: UtilitiesService,
-    private base64:Base64Service,
-    private subjectService:SubjectService,
-    private asistenciaService:AsistenciaService,
-    private router: Router, 
-  ){}
-
+    private subjectService: SubjectService,
+    private ipPublicaService: IpPublicaService,
+    private asistenciaService: AsistenciaService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.buildAsistencia()
+    this.buildAsistenciaForm();
   }
 
-  buildAsistencia(): void {
+  /**
+   * Construye el formulario de asistencia.
+   */
+  private buildAsistenciaForm(): void {
     this.formAsistencia = this.formBuilder.group({
-      codigoEstudiante: new FormControl<string>('', [
-        Validators.required, 
-      ]
-      ),
-      numeroDocumento: new FormControl('', [
-        Validators.required,
-      ])
+      codigoEstudiante: new FormControl<string>('', Validators.required),
+      numeroDocumento: new FormControl('', Validators.required)
     });
   }
 
-  loginEstudiante(){
-    const {codigoEstudiante, numeroDocumento} = this.formAsistencia.value
-    const loginEstudiante:LoginEstudiante = {
-      numeroDocumento: numeroDocumento,
-      codigoEstudiante: codigoEstudiante
+  /**
+   * Realiza el login del estudiante, procesa el token y sigue con el flujo de asistencia.
+   */
+  loginEstudiante(): void {
+    if (this.formAsistencia.invalid) {
+      this.utilitiesService.showErrorMessage('Por favor complete todos los campos requeridos.');
+      return;
     }
-    this.spinner.show()
-    this.estudianteService.authEstudiatnte(loginEstudiante).pipe(
-      tap((objeto: RespuestaGeneral) => {
-        const token:AuthResponse = objeto.data as AuthResponse;
-        const estudianteData:EstudianteTokenData = jwtDecode(token.token);
+
+    const loginData: LoginEstudiante = this.formAsistencia.value;
+    this.spinner.show();
+
+    this.estudianteService.authEstudiatnte(loginData).pipe(
+      tap((response: RespuestaGeneral) => {
+        const token = response.data as AuthResponse;
+        const estudianteData: EstudianteTokenData = jwtDecode(token.token);
         this.codigoEstudiante = estudianteData.codigoEstudiante;
+        this.processAsistencia()
       }),
       catchError((err) => {
-        console.error("Error: ", err);
-        this.utilitiesService.showErrorMessage(err.message);
-        this.spinner.hide();
+        console.log(err)
+        this.utilitiesService.showErrorMessage(err.message || 'Error al autenticar al estudiante.');
+        this.spinner.hide()
         return of(null);
       }),
       finalize(() => {
-        console.log("continua con formatear")
-        this.formatAsistencia()
       })
-    ).subscribe()
+    ).subscribe();
   }
 
-  formatAsistencia(){
-    let asistencia:Asistencia = {
-      codigoAsistencia: this.subjectService.getValue(),
-      codigoEstudianteFk: {
-        codigoEstudiante: this.codigoEstudiante
-      },
-      fechaAsistencia: new Date
-    }
-    this.saveAsistencia(asistencia)
-  }
+  /**
+   * Procesa los datos de asistencia verificando la IP pública.
+   */
+  private processAsistencia(): void {
+    const codigoQr = this.subjectService.getValue() || '';
 
-  saveAsistencia(asistencia:Asistencia){
-    let valido = false;
-    this.asistenciaService.guardarAsistencia(asistencia).pipe(
+    this.ipPublicaService.obtenerIpPublica().pipe(
       tap((data) => {
-        valido = true
+        if (data.ip) {
+          const ipPublica = data.ip;
+          const asistencia: Asistencia = this.createAsistenciaObject(codigoQr, ipPublica);
+          this.saveAsistencia(asistencia); // Guarda la asistencia si todo es correcto
+        } else {
+          this.utilitiesService.showErrorMessage('No se pudo obtener la IP pública.');
+          throw new Error('No se pudo obtener la IP pública.');
+        }
       }),
-      catchError((err) => {
-        console.error("Error: ", err);
-        this.utilitiesService.showErrorMessage(err.message);
-        this.spinner.hide();
-        return of(null);
-      }),
-      finalize(() => {
-        if(valido){
-          this.utilitiesService.showInfoMessage("Se guardo correctamente la asistencia")
-          this.router.navigate(['/qr'])
+      catchError((err:RespuestaGeneral) => {
+        console.log(err)
+        this.utilitiesService.showErrorMessage(err.message || 'Error obteniendo la IP pública.');
+        let respuesta:RespuestaIpPublica = {
+          ip:null
         }
         this.spinner.hide()
+        return of(respuesta);
       })
     ).subscribe()
   }
 
+  /**
+   * Crea el objeto Asistencia.
+   * @param codigoQr Código QR asociado.
+   * @param ipPublica IP pública del estudiante.
+   * @returns Objeto Asistencia.
+   */
+  private createAsistenciaObject(codigoQr: string, ipPublica: string): Asistencia {
+    return {
+      codigoAsistencia: this.subjectService.getValue(),
+      codigoEstudianteFk: { codigoEstudiante: this.codigoEstudiante },
+      ipEstudiante: ipPublica,
+      codigoQrFk: { codigoQr },
+      fechaAsistencia: new Date()
+    };
+  }
+
+  /**
+   * Guarda la asistencia y redirige tras éxito.
+   * @param asistencia Objeto Asistencia.
+   */
+  private saveAsistencia(asistencia: Asistencia): void {
+    this.asistenciaService.guardarAsistencia(asistencia).pipe(
+      tap(() => {
+        this.utilitiesService.showInfoMessage('Se guardó correctamente la asistencia.');
+        this.router.navigate(['/login']); // Redirige a la página de login
+      }),
+      catchError((err) => {
+        console.log(err)
+        this.utilitiesService.showErrorMessage(err.message || 'Error al guardar la asistencia.');
+        this.spinner.hide()
+        return of(null);
+      }),
+      finalize(() => this.spinner.hide())
+    ).subscribe();
+  }
 }

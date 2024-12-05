@@ -74,7 +74,7 @@ export class DefaultInterceptor implements HttpInterceptor {
       case 404:
       case 500:
         return throwError(() => {
-          this.getCustomError(errorResponse)
+          return throwError(()=>  this.getCustomError(errorResponse))
         });
       default:
         return throwError(() => this.getCustomError(errorResponse));
@@ -91,6 +91,7 @@ export class DefaultInterceptor implements HttpInterceptor {
       // Verificar si errorResponse y su estructura existen
       const error:RespuestaGeneral = errorResponse?.error;
       customError = HttpError.initWithCode(String(error.status));
+      customError.message = error.message
     } catch (e) {
       console.error('Error parsing custom error:', e);
     }
