@@ -155,9 +155,6 @@ export class AsistentesComponent implements OnInit {
       codigoCursoFk: {
         codigoCurso: this.subject.getValue(),
       },
-      codigoQrFk: {
-        codigoQr: codigoQr!,
-      },
       fechaAsistencia: new Date(),
     };
 
