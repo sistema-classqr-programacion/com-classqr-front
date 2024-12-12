@@ -23,7 +23,7 @@
               <mat-form-field appearance="fill" class="w-100">
                 <mat-label>Contraseña</mat-label>
                 <input matInput placeholder="Ingresa tu contraseña" formControlName="password" [type]="hide ? 'password' : 'text'">
-                <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Toggle password visibility'" [attr.aria-pressed]="hide">
+                <button mat-icon-button matSuffix type="button" (click)="hide = !hide" [attr.aria-label]="'Toggle password visibility'" [attr.aria-pressed]="hide">
                   <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
                 </button>
                 <mat-error *ngFor="let errorMessage of errorHandlerService.getErrorMessages(formLogin, 'password')">

@@ -64,7 +64,8 @@ export class UtilitiesService {
       allowOutsideClick: false,
       allowEscapeKey: false,
       allowEnterKey: false,
-      scrollbarPadding: false 
+      scrollbarPadding: false ,
+      backdrop: false, // Quita el fondo opaco
     };
     await swalWithBootstrapButtons.fire(swalConfig).then((result: ISafeAny) => {
       if (result.isConfirmed && router !== '') {
