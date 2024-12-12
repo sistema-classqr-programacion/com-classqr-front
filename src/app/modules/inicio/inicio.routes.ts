@@ -13,7 +13,7 @@ export const PANTALLA_QR: Routes = [
         component: PantallaQrComponent,
       },
       {
-        path: 'asistentes', // Ruta para Asistentes
+        path: 'asistentes/:codigo', // Ruta para Asistentes
         component: AsistentesComponent,
       },
       {

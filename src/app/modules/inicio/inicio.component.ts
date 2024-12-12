@@ -80,7 +80,8 @@ export class InicioComponent implements OnInit {
    * Maneja el cambio de curso seleccionado desde el header
    */
   onCursoSeleccionado(codigoCurso: string): void {
+    let rutaActual = this.router.url.split('/');
     this.subject.setValue(codigoCurso); // Actualiza el valor en el Subject
-    this.router.navigate(['/inicio/pantalla-qr/' + codigoCurso]); // Redirige a la ruta con el curso seleccionado
+    this.router.navigate(['/inicio/'+ rutaActual[2]+ '/' + codigoCurso]); // Redirige a la ruta con el curso seleccionado
   }
 }

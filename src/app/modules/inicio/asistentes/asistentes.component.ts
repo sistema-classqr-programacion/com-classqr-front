@@ -13,6 +13,7 @@ import { CambiarEstadoDialogComponent } from '../cambiar-estado-dialog/cambiar-e
 import { Asistencia } from '@sharedModule/models/Asistencia';
 import { jwtDecode } from 'jwt-decode';
 import { AsistenciaService } from '@sharedModule/service/asistencia.service';
+import { ActivatedRoute, Route } from '@angular/router';
 
 @Component({
   selector: 'app-asistentes',
@@ -31,11 +32,14 @@ export class AsistentesComponent implements OnInit {
     private subject: SubjectService,
     private dialog: MatDialog,
     private spinner: NgxSpinnerService,
+    private route: ActivatedRoute,
     private asistenciaService: AsistenciaService
   ) {}
 
   ngOnInit(): void {
-    this.cargarEstudiantes();
+    this.route.paramMap.subscribe(() => {
+      this.cargarEstudiantes();
+    })
   }
 
   /**
